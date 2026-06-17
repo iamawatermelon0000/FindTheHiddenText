@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>ZmluZCB0aGUgaGlkZGVuIHRleHQ=, cGFydCAz</title>
+
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 50px;
+      }
+
+      #inputSection {
+        position: fixed;
+        top: 0;
+        
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 75px;
+
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-weight: bolder;
+        font-size: 25px;
+      }
+
+      #b, #answer {
+        width: 175px;
+        height: calc(175px - 75px);
+
+        font-size: 25px;
+        font-family: 'Courier New', Courier, monospace;
+        font-weight: bold;
+      }
+
+      #answer {
+        width: 275px;
+      }
+
+      #text {
+        position: absolute;
+
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-weight: lighter;
+        font-size: 20px;
+      }
+
+      #hint {
+        color: brown;
+        font-weight: bold;
+        font-style: italic;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <div id="inputSection">
+      <input type="text" id="answer" placeholder="Enter what you see here...">
+      <button id="b" type="button" onclick="sendAns()">Confirm</button>
+      <p id="hint">Hint:</p>
+    </div>
+
+    <div id="text"></div>
+
+    <script>
+      let pr = document.getElementById("text");
+      let prHint = document.getElementById("hint");
+
+      let t = "";
+      const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+      let ch = chars;
+      let index;
+
+      let backgrounds = [
+        "black",
+        "white",
+        "red",
+        "yellow",
+        "orange"
+      ];
+      let b;
+
+      let score = 0;
+
+      let x, y;
+
+      function update() {
+
+        t = "";
+
+        for (let i = 0; i < Math.floor(Math.random() * 20) + 1; i++) {
+
+          index = Math.floor(Math.random() * chars.length);
+          t += chars[index];
+          chars[index] = "";
+
+        }
+        pr.textContent = t;
+
+        b = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+        
+        document.body.style.background = b;
+        pr.style.color = b;
+
+        x = Math.floor(Math.random() * window.innerWidth);
+        y = Math.floor(Math.random() * window.innerHeight);
+
+        pr.style.left = x + 'px';
+        pr.style.top = y + 'px';
+
+        prHint.textContent = `Hint: [First half: ${t.slice(0, t.length / 2)}]; [Position: x = ${x}, y = ${y}]`;
+      };
+
+      function sendAns() {
+
+        let a = document.getElementById("answer").value;
+
+        if (!a) return;
+
+        if (a === t) {
+          score++;
+          alert("interesting...");
+          update();
+        } else {
+          alert("You're not worthy.");
+        };
+
+        if (score === 20 || chars.length === 0) {
+          alert("You may now pass, you've proven your worth.");
+
+          setTimeout(() => {
+            window.location.replace("https://youtube.com");
+          }, 2500);
+        };
+
+        document.getElementById("answer").value = "";
+      };
+
+      document.addEventListener("DOMContentLoaded", () => {
+
+        try {
+          update();
+        } catch (err) {
+          alert("Error found, open DevConsole.");
+          console.warn(`Error found: ${err}`);
+
+          document.body.innerHTML = "";
+        };
+
+      })
+    </script>
+  </body>
+</html>

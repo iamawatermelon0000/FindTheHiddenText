@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>You're almost there... (Part 4)</title>
+
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 50px;
+      }
+
+      #inputSection {
+        position: fixed;
+        top: 0;
+        
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 75px;
+
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-weight: bolder;
+        font-size: 25px;
+      }
+
+      #b, #answer {
+        width: 175px;
+        height: calc(175px - 75px);
+
+        font-size: 25px;
+        font-family: 'Courier New', Courier, monospace;
+        font-weight: bold;
+      }
+
+      #answer {
+        width: 275px;
+      }
+    </style>
+
+  </head>
+  <body>
+
+    <div id="inputSection" title="DEBUG functions inside <script>">
+      <input type="text" id="answer" placeholder="Enter every text you see here...">
+      <button id="b" type="button" onclick="sendAns()">Confirm</button>
+    </div>
+
+    <script>
+
+      document.body.style.background = "black";
+
+      const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+      let ch = chars;
+      let index;
+      let t = "";
+      let ot = "";
+      let at = [];
+
+      let score = 0;
+
+      let x, y;
+      let pr;
+
+      let ans;
+      let a;
+
+      function update() {
+
+        t = [];
+        ot = "";
+
+        for (let i = 0; i < Math.floor(Math.random() * (15 - 5 + 1) + 5) + 1; i++) {
+
+          index = Math.floor(Math.random() * ch.length);
+          ot = ch[index];
+          t += ot;
+          at.push(t);
+
+          x = Math.floor(Math.random() * window.innerWidth);
+          y = Math.floor(Math.random() * window.innerHeight);
+
+          pr = document.createElement("div");
+          pr.style.position = 'absolute';
+          pr.textContent = t;
+
+          pr.style.top = y + 'px';
+          pr.style.left = x + 'px';
+
+          document.body.appendChild(pr);
+        }
+      }
+
+      function sendAns() {
+
+        ans = document.getElementById("answer").value;
+        a = ans.split(" ");
+
+        if (!ans) return;
+
+        if (a.join("-") === at.join("-")) {
+          score++;
+          alert("no... this can't be...");
+
+          update();
+        } else {
+          alert("yea... no.");
+        }
+
+        if (score === 5 || ch.length === 0) {
+          alert("You're ready for the final boss...");
+
+          setTimeout(() => {
+            window.location.replace('about:blank')
+          }, 2500)
+        }
+      }
+
+      function sendWithoutData() {
+
+        if (a.join("-") === at.join("-")) {
+        console.warn(`DEBUG: [USER-ANS-ARR:] a.join("-") === [SYSTEM-ANSWER-ARR:] at.join("-") // ${a.join("-") === at.join("-")}, a: ${a}, at: ${at} (renewed = false)`);
+          score++;
+          let c = confirm("Send without getting new data, proceed?");
+
+          if (!c) return;
+          update();
+
+        } else {
+        console.warn(`DEBUG: [USER-ANS-ARR:] a.join("-") === [SYSTEM-ANSWER-ARR:] at.join("-") // ${a.join("-") === at.join("-")}, a: ${a}, at: ${at} (renewed = false)`);
+          let cf = confirm("Sent without getting new data, incorrect answer. Continue?");
+
+          if (!cf) return;
+          update();
+        };
+
+        console.warn(`DEBUG: [USER-ANS-ARR:] a.join("-") === [SYSTEM-ANSWER-ARR:] at.join("-") // ${a.join("-") === at.join("-")}, a: ${a}, at: ${at} (renewed = true)`);
+
+      }
+      function debugFunc() {
+        a = [...at];
+        console.warn(`Final-Answer: ${t}, Set Your-Answer as: ${a}`);
+
+        sendWithoutData();
+      }
+
+      document.addEventListener("keydown", e => {
+          if (e.key === "Enter") sendAns();
+      })
+      document.addEventListener("DOMContentLoaded", () => {
+          try {
+            update();
+          } catch (err) {
+            console.warn(`Error Found: ${err}`);
+            return;
+          }
+      })
+
+    </script>
+  </body>
+</html>

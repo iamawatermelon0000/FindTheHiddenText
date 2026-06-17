@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>There are no hidden texts.</title>
+
+    <style>
+      body {
+        text-align: center;
+        font-size: 25px;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #inputSection {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 25px;
+
+        text-align: center;
+      }
+
+      #hint {
+        position: fixed;
+        bottom: 0;
+
+        font-weight: bold;
+        font-style: italic;
+      }
+
+      p {
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-weight: bold;
+        font-style: italic;
+      }
+
+      input, button {
+        text-align: center;
+        font-style: italic;
+        font-weight: bold;
+
+        width: 275px;
+        height: 50px;
+
+        font-size: 25px;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div id="inputSection">
+      <input type="text" id="answer" placeholder="Enter something...">
+      <button id="b" type="button" onclick="confirmAns()">Confirm</button>
+    </div>
+    
+    <p id="text">There are no hidden texts.</p>
+
+    <p id="hiddenText"></p>
+
+    <p id="hint">maybe try hovering your mouse with elements within this window..?</p>
+
+    <script>
+
+      const titleOrder = [
+        "THANK-YOU",
+        "FOR-PLAYING",
+        "THIS-HTML-GAME,",
+        "HAVE-A-GOOD-DAY!",
+        "Send 'aSBwbGF5ZWQgd2F0ZXJtZWxvbidzIGdhbWU=' in the channel that you found this file!"
+      ];
+      let order = [...titleOrder];
+      let index = -1;
+      let currTitle;
+
+      let currOrder = 0;
+
+      let input;
+      let inputAns;
+
+      let btn;
+      let pr;
+      let hidden;
+
+      function confirmAns() {
+
+        if (!currTitle) return; 
+
+        input = document.getElementById("answer");
+        inputAns = input.value;
+
+        btn = document.getElementById('b');
+        pr = document.getElementById("text");
+
+        hidden = document.getElementById('hiddenText');
+        
+        if (currTitle.includes(inputAns)) {
+          hidden.textContent += ` ${currTitle}`;
+          update();
+        } else if (!currTitle.includes(inputAns) && index >= 0) {
+          alert(`This is a special part... so the answer is ${currTitle}`)
+        }
+        
+        if (order.length === 0 || index >= 4) {
+            pr.textContent = "Incase you didn't see it, send 'aSBwbGF5ZWQgd2F0ZXJtZWxvbidzIGdhbWU=' in the channel that you found this file or directly to @iamawatermelon0000!"
+        } 
+
+        document.getElementById("answer").value = "";
+    }
+
+      function update() {
+
+        input = document.getElementById("answer");
+        inputAns = input.value;
+
+        btn = document.getElementById('b');
+        pr = document.getElementById("text");
+
+        hidden = document.getElementById('hiddenText'); 
+
+        index++;
+        currTitle = titleOrder[index];
+        order.splice(index, 1);
+        
+
+        if (index === 0) {
+          pr.title = currTitle;
+        } else if (index === 1) {
+          btn.title = currTitle;
+        } else if (index === 2) {
+          hidden.title = currTitle;
+        } else if (index === 3) {
+          input.title = currTitle
+        } else if (index === 4) {
+          document.body.title = currTitle;
+        }
+
+        console.warn(`Index updated, current index: ${index}`);
+        console.warn(`New title-content: ${currTitle}`);
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        console.warn("content loaded, calling update()")
+        try {
+          confirmAns(); 
+          update();
+        } catch (err) {
+          console.warn(err);
+        }
+      });
+
+      document.addEventListener("keydown", e => {
+        if (e.key === "Enter") confirmAns();  
+      })
+    </script>
+  </body>
+</html>

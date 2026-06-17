@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>find the hidden #ERROR => [{ EXECUTABLE_NOT_FOUND }, Respone: ignore] p???</title>
+
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 50px;
+      }
+
+      #inputSection {
+        position: fixed;
+        top: 0;
+        
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 75px;
+
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-weight: bolder;
+        font-size: 25px;
+      }
+
+      #b, #answer {
+        width: 175px;
+        height: calc(175px - 75px);
+
+        font-size: 25px;
+        font-family: 'Courier New', Courier, monospace;
+        font-weight: bold;
+      }
+
+      #answer {
+        width: 275px;
+      }
+
+      #text {
+        position: absolute;
+
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-weight: lighter;
+        font-size: 20px;
+      }
+
+      #rbtn {
+        position: fixed;
+        top: 0;
+        left: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <button id="rbtn" type="button" onclick="revealAns()">stuck? reveal answer (2 times only)</button>
+
+    <div id="inputSection">
+      <input type="text" id="answer" placeholder="Enter your answer here...">
+      <button id="b" type="button" onclick="sendAnswer()">Confirm</button>
+      <p id="hint">Hint:</p>
+    </div>
+
+    <div id="text"></div>
+
+    <script>
+      const texts = [
+        "text no1",
+        "text no2",
+        "text no3",
+        "number 4",
+        "number 5",
+        "the last one (number 6)"
+      ];
+      const text = [...texts]
+      let index;
+      let t;
+
+      const backgrounds = [
+        "white",
+        "black"
+      ];
+      let b;
+
+      let x = 0, y = 0;
+
+      let prText = document.getElementById("text");
+      let prHint = document.getElementById("hint");
+
+      let revBtn = document.getElementById("rbtn");
+      let used = 0;
+
+      update();
+      alert("you cannot escape this time...");
+
+      function update() {
+
+        index = Math.floor(Math.random() * text.length);
+        t = text[index];
+        text.splice(index, 1);
+
+        prText.textContent = t;
+
+        b = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+
+        document.body.style.background = b;
+        prText.style.color = b; 
+        
+        if (b === "white") prHint.style.color = "black";
+        if (b === "black") prHint.style.color = "white";
+
+        x = Math.floor(Math.random() * (window.innerWidth + 500))
+        y = Math.floor(Math.random() * (window.innerHeight + 1000));
+
+        prHint.textContent = `Hint: x = ${x}, y = ${y}`;
+
+        prText.style.left = x + 'px';
+        prText.style.top = y + 'px';
+      }
+
+      function revealAns() {
+        alert(`Answer: ${t}`);
+
+        used++;
+      
+        if (used === 2) revBtn.disabled = true;
+      }
+
+      function sendAnswer() {
+
+        let ans = document.getElementById("answer").value;
+        if (!ans) { console.warn("Answer = null, please recheck your answer."); return; };
+
+        if (ans === t) {
+          alert("no... this can't be...");
+          update();
+
+        } else {
+          alert("*you sent an incorrect answer*");
+        }
+
+        if (text.length === 0) {
+          alert("you cannot escape....");
+          alert("*kaboom*");
+          alert("u won part 2!");
+
+          seTimeout(() => {
+            window.replace("about:blank");
+          }, 2500);
+        }
+
+        document.getElementById("answer").value = "";
+      };
+
+      document.addEventListener("keydown", e => {
+        if (e.key === "Enter") sendAnswer();
+      });
+
+    </script>
+  </body>
+</html>
